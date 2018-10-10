@@ -72,7 +72,7 @@ textarea:focus {
     display: none;
 }
 
-.annotation {
+.note {
     position: absolute;
     top: 0;
     left: 0;
@@ -86,7 +86,7 @@ textarea:focus {
     transition: width .1s, height .1s;
 }
 
-.annotation.open {
+.note.open {
     position: absolute;
     top: 0;
     left: 0;

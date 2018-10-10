@@ -5,113 +5,135 @@ let light;
 let scene;
 let loader;
 let controls;
-let group;
 let raycaster;
 let mouse;
 let renderer;
-let mesh;
-const annotation = document.querySelector(".annotation");
+let clickLocation;
+let noteLocation;
+const note = document.querySelector(".note");
 
+init();
+animate();
 
-// Camera
+function init() {
 
-camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, .5, 4000);
-camera.position.x = 5;
-camera.position.y = 7.5;
-camera.position.z = 12.5;
+    // Camera
 
-// Scene
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, .5, 4000);
+    camera.position.x = 5;
+    camera.position.y = 7.5;
+    camera.position.z = 12.5;
 
-scene = new THREE.Scene();
+    // Scene
 
-// GLTF Loader
+    scene = new THREE.Scene();
 
-loader = new THREE.GLTFLoader();
-loader.load('models/gltf/Startup.glb', function (gltf) {
-    scene.add(gltf.scene);
+    // GLTF Loader
 
-    // Light
+    loader = new THREE.GLTFLoader();
+    loader.load('models/gltf/Startup.glb', function (gltf) {
+        scene.add(gltf.scene);
 
-    light = new THREE.AmbientLight(0xc0c0a0)
-    scene.add(light);
+        // Light
 
-    // Raycaster
+        light = new THREE.AmbientLight(0xc0c0a0)
+        scene.add(light);
 
-    raycaster = new THREE.Raycaster();
-    mouse = new THREE.Vector3();
+        // Raycaster
 
-    function onDocumentMouseDown(event) {
+        raycaster = new THREE.Raycaster();
+        mouse = new THREE.Vector3();
+        clickLocation = new THREE.Vector3();
 
-        let mousex = (event.clientX / window.innerWidth) * 2 - 1
-        let mousey = -(event.clientY / window.innerHeight) * 2 + 1
-        mouse.set(mousex, mousey);
+        function onDocumentMouseDown(event) {
 
-        raycaster.setFromCamera(mouse, camera);
+            let mousex = (event.clientX / window.innerWidth) * 2 - 1
+            let mousey = -(event.clientY / window.innerHeight) * 2 + 1
+            mouse.set(mousex, mousey);
 
-        let intersects = raycaster.intersectObject(gltf.scene, true);
+            raycaster.setFromCamera(mouse, camera);
 
-        if (intersects.length > 0) {
+            let intersects = raycaster.intersectObject(gltf.scene, true);
+            let intersection = intersects[0];
 
-            annotation.style.top = `${event.clientY}px`;
-            annotation.style.left = `${event.clientX}px`;
+            clickLocation.copy(intersection.point)
 
+            if (intersects.length > 0) {
+
+                note.style.top = `${event.clientY}px`;
+                note.style.left = `${event.clientX}px`;
+
+            }
         }
-    }
 
-    // Renderer
+        // Renderer
 
-    renderer = new THREE.WebGLRenderer({
-        antialias: true
-    });
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(0xffffff, 1);
-    document.body.appendChild(renderer.domElement);
-
-    // Controls
-
-    controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.25;
-    controls.screenSpacePanning = false;
-    controls.maxDistance = 3000;
-    controls.minDistance = 200;
-
-    window.addEventListener("resize", onWindowResize, false);
-    window.addEventListener("mousedown", onDocumentMouseDown, false);
-
-    function onWindowResize() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-
+        renderer = new THREE.WebGLRenderer({
+            antialias: true
+        });
+        renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
-    }
+        renderer.setClearColor(0xffffff, 1);
+        document.body.appendChild(renderer.domElement);
 
-    function animate() {
-        requestAnimationFrame(animate);
-        controls.update();
-        render();
-    }
+        // Controls
 
-    function render() {
-        renderer.render(scene, camera);
-    }
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.25;
+        controls.screenSpacePanning = false;
+        controls.maxDistance = 3000;
+        controls.minDistance = 200;
 
-    animate();
+        window.addEventListener("resize", onWindowResize, false);
+        window.addEventListener("mousedown", onDocumentMouseDown, false);
+    });
+}
 
-});
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    render();
+}
+
+function render() {
+    renderer.render(scene, camera);
+    updateScreenPosition()
+}
+
+function updateScreenPosition() {
+    const canvas = renderer.domElement;
+    noteLocation = new THREE.Vector3();
+    noteLocation.copy(clickLocation);
+    
+    noteLocation.project(camera);
+
+    noteLocation.x = (0.5 + noteLocation.x / 2) * (canvas.width / window.devicePixelRatio);
+    noteLocation.y = (0.5 - noteLocation.y / 2) * (canvas.height / window.devicePixelRatio);
+
+    note.style.top = `${noteLocation.y}px`;
+    note.style.left = `${noteLocation.x}px`;
+
+}
 
 // Annotation Interaction
 
 document.querySelector('.open-button').addEventListener('click', function () {
-    document.querySelector('.annotation').classList.toggle('open');
+    document.querySelector('.note').classList.toggle('open');
     document.querySelector('textarea').classList.toggle('visible');
     document.querySelector('h1').classList.toggle('visible');
     document.querySelector('.close-button').classList.toggle('visible');
     document.querySelector('.open-button').classList.toggle('invisible');
 });
 document.querySelector('.close-button').addEventListener('click', function () {
-    document.querySelector('.annotation').classList.toggle('open');
+    document.querySelector('.note').classList.toggle('open');
     document.querySelector('textarea').classList.toggle('visible');
     document.querySelector('h1').classList.toggle('visible');
     document.querySelector('.open-button').classList.toggle('invisible');
