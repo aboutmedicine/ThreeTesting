@@ -10,6 +10,7 @@ let mouse;
 let renderer;
 let clickLocation;
 let noteLocation;
+let noteMode = false;
 const note = document.querySelector(".note");
 
 init();
@@ -44,25 +45,29 @@ function init() {
         raycaster = new THREE.Raycaster();
         mouse = new THREE.Vector3();
         clickLocation = new THREE.Vector3();
-
+        
+        // Currently every click attempts to get intersection from mesh to assign to note
+        // TODO: this function triggers only once to set note location
         function onDocumentMouseDown(event) {
-
+            
+            // Converts window coords to NDCs
             let mousex = (event.clientX / window.innerWidth) * 2 - 1
             let mousey = -(event.clientY / window.innerHeight) * 2 + 1
             mouse.set(mousex, mousey);
 
             raycaster.setFromCamera(mouse, camera);
-
+            
+            // Gets intersection
             let intersects = raycaster.intersectObject(gltf.scene, true);
             let intersection = intersects[0];
-
-            clickLocation.copy(intersection.point)
 
             if (intersects.length > 0) {
 
                 note.style.top = `${event.clientY}px`;
                 note.style.left = `${event.clientX}px`;
-
+                
+                // Passes intersection coords to variable used in updateScreenPosition()
+                clickLocation.copy(intersection.point)
             }
         }
 
@@ -76,7 +81,7 @@ function init() {
         renderer.setClearColor(0xffffff, 1);
         document.body.appendChild(renderer.domElement);
 
-        // Controls
+        // Orbit Controls
 
         controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
@@ -138,8 +143,4 @@ document.querySelector('.close-button').addEventListener('click', function () {
     document.querySelector('h1').classList.toggle('visible');
     document.querySelector('.open-button').classList.toggle('invisible');
     document.querySelector('.close-button').classList.toggle('visible');
-});
-
-scene.traverse(function (child) {
-    console.log(child);
 });
