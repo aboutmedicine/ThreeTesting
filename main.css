@@ -8,31 +8,29 @@ canvas {
     height: 100%
 }
 
-h1 {
-    font-size: 24px;
-    margin: -3px 0px -5px 0px;
-    font-weight: 600;
-    color: #eee;
-    display: none;
-}
-
 input,
 textarea {
     color: #cacaca;
     font-size: 1em;
     font-weight: 300;
     font-family: 'Avenir Next';
-    resize: vertical;
     background: none;
     border: none;
     width: 95%;
     margin: 10px;
     display: none;
+    transition: .1s;
+    resize: none;
 }
 
 textarea:focus,
-button:focus {
+button:focus,
+input:focus {
     outline: none;
+}
+
+input::placeholder {
+    color: #bbb;
 }
 
 button {
@@ -78,7 +76,7 @@ button.selected {
 }
 
 .close-button {
-    font-size: 30px;
+    font-size: 32px;
     font-weight: 600;
     color: #bbb;
     cursor: pointer;
@@ -88,22 +86,11 @@ button.selected {
     display: block;
     transition: .2s;
     display: none;
+    opacity: .25;
 }
 
 .open-button:hover {
     color: #aaa;
-}
-
-.close-button:hover {
-    color: #eee;
-}
-
-.visible {
-    display: block;
-}
-
-.invisible {
-    display: none;
 }
 
 .note {
@@ -117,19 +104,56 @@ button.selected {
     background: rgba(50, 50, 50, 0.8);
     border-radius: 0px 20px 20px 20px;
     line-height: 1.3;
-    transition: width .1s, height .1s;
+    transition: height .1s, width .1s;
 }
 
-.note.open {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    padding: 1em;
+.open {
     width: 300px;
-    height: 100px;
-    background: rgba(50, 50, 50, 0.8);
-    border-radius: 0px 20px 20px 20px;
+    height: 150px;
     line-height: 1.3;
-    transition: width .1s, height .1s;
+    transition: height .1s, width .1s;
+}
+
+.notetitle {
+    font-size: 24px;
+    margin: -3px 0px -5px 0px;
+    font-weight: 600;
+    color: #eee;
+    display: none;
+    transition: .2s;
+}
+
+.ico {
+    position: absolute;
+    display: block;
+    width: 24px;
+    height: 24px;
+    display: none;
+    transition: .2s;
+    opacity: .25;
+}
+
+.ico:hover, 
+.close-button:hover {
+    opacity: 1;
+}
+
+.delete {
+    background: url('/assets/icons/delete.svg') no-repeat;
+    right: 42px;
+    bottom: 12px;
+}
+
+.save {
+    background: url('/assets/icons/save.svg') no-repeat;
+    right: 12px;
+    bottom: 12px;
+}
+
+.visible {
+    display: block;
+}
+
+.invisible {
+    display: none;
 }

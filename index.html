@@ -9,14 +9,21 @@
 </head>
 
 <body>
-    
+
+
     <button class="modebutton">Note Mode</button>
+
+    <!--    <button class="addnote">Add Note</button>-->
+    
+    <div id="notes"></div>
 
     <div class="note">
         <div class="open-button">+</div>
-        <h1>Title</h1>
-        <div class="close-button">&times</div>
-        <textarea rows="5" placeholder="Type Here..."></textarea>
+        <input class="notetitle" placeholder="Note">
+        <div class="close-button">&times;</div>
+        <textarea rows="3" placeholder="Type Here..."></textarea>
+        <a href="#" class="ico delete"></a>
+        <a href="#" class="ico save"></a>
     </div>
 
     <script src="js/three.js"></script>

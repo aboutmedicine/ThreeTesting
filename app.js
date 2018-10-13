@@ -116,9 +116,11 @@ function init() {
 
         function toggleNote() {
             document.querySelector('.note').classList.toggle('open');
-            document.querySelector('h1').classList.toggle('visible');
+            document.querySelector('.notetitle').classList.toggle('visible');
             document.querySelector('textarea').classList.toggle('visible');
             document.querySelector('.close-button').classList.toggle('visible');
+            document.querySelector('.ico.delete').classList.toggle('visible');
+            document.querySelector('.ico.save').classList.toggle('visible');
             document.querySelector('.open-button').classList.toggle('invisible');
         }
 
