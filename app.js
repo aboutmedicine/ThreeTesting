@@ -45,29 +45,32 @@ function init() {
         raycaster = new THREE.Raycaster();
         mouse = new THREE.Vector3();
         clickLocation = new THREE.Vector3();
-        
+
         // Currently every click attempts to get intersection from mesh to assign to note
         // TODO: this function triggers only once to set note location
         function onDocumentMouseDown(event) {
-            
-            // Converts window coords to NDCs
-            let mousex = (event.clientX / window.innerWidth) * 2 - 1
-            let mousey = -(event.clientY / window.innerHeight) * 2 + 1
-            mouse.set(mousex, mousey);
 
-            raycaster.setFromCamera(mouse, camera);
-            
-            // Gets intersection
-            let intersects = raycaster.intersectObject(gltf.scene, true);
-            let intersection = intersects[0];
+            if (noteMode === true) {
 
-            if (intersects.length > 0) {
+                // Converts window coords to NDCs
+                let mousex = (event.clientX / window.innerWidth) * 2 - 1
+                let mousey = -(event.clientY / window.innerHeight) * 2 + 1
+                mouse.set(mousex, mousey);
 
-                note.style.top = `${event.clientY}px`;
-                note.style.left = `${event.clientX}px`;
-                
-                // Passes intersection coords to variable used in updateScreenPosition()
-                clickLocation.copy(intersection.point)
+                raycaster.setFromCamera(mouse, camera);
+
+                // Gets intersection
+                let intersects = raycaster.intersectObject(gltf.scene, true);
+                let intersection = intersects[0];
+
+                if (intersects.length > 0) {
+
+                    note.style.top = `${event.clientY}px`;
+                    note.style.left = `${event.clientX}px`;
+
+                    // Passes intersection coords to variable used in updateScreenPosition()
+                    clickLocation.copy(intersection.point)
+                }
             }
         }
 
@@ -92,6 +95,33 @@ function init() {
 
         window.addEventListener("resize", onWindowResize, false);
         window.addEventListener("mousedown", onDocumentMouseDown, false);
+
+        // Turn on noteMode
+        
+        document.querySelector('.modebutton').addEventListener('click', function () {
+            if (noteMode === false) {
+                noteMode = true;
+                document.querySelector('.modebutton').classList.toggle('selected');
+            } else {
+                noteMode = false;
+                document.querySelector('.modebutton').classList.toggle('selected');
+            }
+            console.log(noteMode)
+        })
+
+        // Annotation Interaction
+
+        document.querySelector('.open-button').addEventListener('click', toggleNote);
+        document.querySelector('.close-button').addEventListener('click', toggleNote);
+
+        function toggleNote() {
+            document.querySelector('.note').classList.toggle('open');
+            document.querySelector('h1').classList.toggle('visible');
+            document.querySelector('textarea').classList.toggle('visible');
+            document.querySelector('.close-button').classList.toggle('visible');
+            document.querySelector('.open-button').classList.toggle('invisible');
+        }
+
     });
 }
 
@@ -117,7 +147,7 @@ function updateScreenPosition() {
     const canvas = renderer.domElement;
     noteLocation = new THREE.Vector3();
     noteLocation.copy(clickLocation);
-    
+
     noteLocation.project(camera);
 
     noteLocation.x = (0.5 + noteLocation.x / 2) * (canvas.width / window.devicePixelRatio);
@@ -127,20 +157,3 @@ function updateScreenPosition() {
     note.style.left = `${noteLocation.x}px`;
 
 }
-
-// Annotation Interaction
-
-document.querySelector('.open-button').addEventListener('click', function () {
-    document.querySelector('.note').classList.toggle('open');
-    document.querySelector('textarea').classList.toggle('visible');
-    document.querySelector('h1').classList.toggle('visible');
-    document.querySelector('.close-button').classList.toggle('visible');
-    document.querySelector('.open-button').classList.toggle('invisible');
-});
-document.querySelector('.close-button').addEventListener('click', function () {
-    document.querySelector('.note').classList.toggle('open');
-    document.querySelector('textarea').classList.toggle('visible');
-    document.querySelector('h1').classList.toggle('visible');
-    document.querySelector('.open-button').classList.toggle('invisible');
-    document.querySelector('.close-button').classList.toggle('visible');
-});
