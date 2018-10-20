@@ -32,7 +32,7 @@ function init() {
     // GLTF Loader
 
     loader = new THREE.GLTFLoader();
-    loader.load('models/gltf/Startup.glb', function (gltf) {
+    loader.load('models/gltf/Draco-processed.glb', function (gltf) {
         scene.add(gltf.scene);
 
         // Light
@@ -97,7 +97,7 @@ function init() {
         window.addEventListener("mousedown", onDocumentMouseDown, false);
 
         // Turn on noteMode
-        
+
         document.querySelector('.modebutton').addEventListener('click', function () {
             if (noteMode === false) {
                 noteMode = true;
@@ -109,7 +109,7 @@ function init() {
             console.log(noteMode)
         })
 
-        // Annotation Interaction
+        // Note interaction
 
         document.querySelector('.open-button').addEventListener('click', toggleNote);
         document.querySelector('.close-button').addEventListener('click', toggleNote);
@@ -124,6 +124,45 @@ function init() {
             document.querySelector('.open-button').classList.toggle('invisible');
         }
 
+        // Generate new note
+
+//        function generateNoteHtml(note, index) {
+//            return `
+//    <div class="note">
+//        <div class="open-button">+</div>
+//        <input class="notetitle" placeholder="Note">
+//        <div class="close-button">&times;</div>
+//        <textarea rows="3" placeholder="Type Here..."></textarea>
+//        <a href="#" class="ico delete"></a>
+//        <a href="#" class="ico save"></a>
+//    </div>
+//      `;
+//        }
+//
+//
+//        addNote(note) {
+//            let newNote = {
+//                note,
+//                isComplete: false,
+//            };
+//            notes.push(newNote);
+//            loadNotes();
+//        }
+//
+//        deleteNote(event, noteIndex) {
+//            notes.splice(noteIndex, 1);
+//            loadNotes();
+//        }
+//
+//
+//        // Get notes list
+//
+//        function loadNotes() {
+//            let notesHtml = this.notes.reduce((html, note, index) => html += this.generateNoteHtml(note, index), '');
+//            document.getElementById('noteList').innerHTML = notesHtml;
+//        }
+//
+
     });
 }
 
@@ -136,7 +175,7 @@ function onWindowResize() {
 
 function animate() {
     requestAnimationFrame(animate);
-    controls.update();
+//    controls.update();
     render();
 }
 

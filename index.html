@@ -12,18 +12,23 @@
 
 
     <button class="modebutton">Note Mode</button>
+    <div>
+        <button onclick="addNoteClick()">Add</button>
+    </div>
 
     <!--    <button class="addnote">Add Note</button>-->
-    
-    <div id="notes"></div>
 
-    <div class="note">
-        <div class="open-button">+</div>
-        <input class="notetitle" placeholder="Note">
-        <div class="close-button">&times;</div>
-        <textarea rows="3" placeholder="Type Here..."></textarea>
-        <a href="#" class="ico delete"></a>
-        <a href="#" class="ico save"></a>
+    <div id="notes">
+
+        <div class="note">
+            <div class="open-button">+</div>
+            <input class="notetitle" placeholder="Note">
+            <div class="close-button">&times;</div>
+            <textarea rows="3" placeholder="Type Here..."></textarea>
+            <a href="#" class="ico delete"></a>
+            <a href="#" class="ico save"></a>
+        </div>
+
     </div>
 
     <script src="js/three.js"></script>
